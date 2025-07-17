@@ -1,0 +1,6 @@
+asyncpg
+aiogram
+APScheduler
+python-decouple
+pydantic>=2.7.0
+pydantic-settings==2.5.2

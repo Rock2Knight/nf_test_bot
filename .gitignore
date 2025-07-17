@@ -1,0 +1,10 @@
+/venv
+venv
+/**/__pycache__
+__pycache__
+.env
+/db_handler
+/filters
+/middlewares
+/utils
+/work_time
