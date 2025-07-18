@@ -8,7 +8,8 @@ from aiogram.utils.chat_action import ChatActionSender
 from keyboards.all_keyboards import main_kb, create_spec_kb, create_rat
 from keyboards.inline_kbs import ease_link_kb, get_inline_kb, create_qst_inline_kb
 from utils.my_utils import get_random_person
-from create_bot import questions, bot
+from create_bot import questions, bot, admins
+from filters.is_admin import IsAdmin
 
 start_router = Router()
 
@@ -89,3 +90,25 @@ async def faq_handler(message: Message):
         'Сообщение с инлайн клавиатурой с вопросами', 
         reply_markup=create_qst_inline_kb(questions)
     )
+
+
+@start_router.message(Command(commands=["settings", "about"]))
+async def univers_cmd_handler(message: Message, command: CommandObject):
+    command_args: str = command.args
+    command_name = 'settings' if 'settings' in message.text else 'about'
+    response = f'Была вызвана команда /{command_name}'
+    if command_args:
+        response += f' с меткой <b>{command_args}</b>'
+    else:
+        response += ' без метки'
+    await message.answer(response)
+
+
+@start_router.message(F.text.lower().contains('подписывайся'), IsAdmin(admins))
+async def process_find_word(message: Message):
+    await message.answer('О, админ, здарова! А тебе можно писать подписывайся.')
+
+
+@start_router.message(F.text.lower().contains('подписывайся'))
+async def process_find_word(message: Message):
+    await message.answer('В твоем сообщении было найдено слово "подписывайся", а у нас такое писать запрещено!')
